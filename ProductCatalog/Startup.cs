@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProductCatalog.Authentication;
 using ProductCatalog.Entities;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using ProductCatalog.Filters;
 
 namespace ProductCatalog
 {
@@ -45,7 +46,7 @@ namespace ProductCatalog
                     };
                 });
 
-            services.AddControllers()
+            services.AddControllers(options => options.Filters.Add(typeof(ExceptionFilter)))
                 .AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
             services.AddSwaggerGen(x =>
             {
@@ -81,12 +82,17 @@ namespace ProductCatalog
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Context db)
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env,
+            Context db,
+            ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            loggerFactory.AddFile($"Logs/{nameof(ProductCatalog)}-{{Date}}.log");
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

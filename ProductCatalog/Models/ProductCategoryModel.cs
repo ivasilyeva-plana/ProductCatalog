@@ -2,13 +2,8 @@
 
 namespace ProductCatalog.Models
 {
-    public class ProductCategoryModel
+    public class ProductCategoryModel : ProductCategoryPutModel
     {
         public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
     }
 }

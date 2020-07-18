@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProductCatalog.Entities
 {
-    public class Product
+    public class Product : SoftDeleteEntity
     {
         public int Id { get; set; }
 

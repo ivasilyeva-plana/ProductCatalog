@@ -1,0 +1,13 @@
+2020-07-18T23:35:14.1574098+03:00  [INF] Now listening on: "https://localhost:5001" (d826f4b8)
+2020-07-18T23:35:14.1626750+03:00  [INF] Now listening on: "http://localhost:5000" (d826f4b8)
+2020-07-18T23:35:14.1643326+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2020-07-18T23:35:14.1655152+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2020-07-18T23:35:14.1667764+03:00  [INF] Content root path: "D:\Repos\ProductCatalog\ProductCatalog" (b5d60022)
+2020-07-18T23:35:32.5022913+03:00 0HM1BB89L9GAP:00000005 [ERR] Error executing action - ProductCatalog.Controllers.ProductsController.GetProducts (ProductCatalog) (73469c30)
+System.Exception: test
+   at ProductCatalog.Controllers.ProductsController.GetProducts() in D:\Repos\ProductCatalog\ProductCatalog\Controllers\ProductsController.cs:line 30
+   at lambda_method(Closure , Object )
+   at Microsoft.Extensions.Internal.ObjectMethodExecutorAwaitable.Awaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)

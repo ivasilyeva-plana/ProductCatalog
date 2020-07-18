@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProductCatalog.Entities;
+using ProductCatalog.Extensions;
 using ProductCatalog.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ProductCatalog.Controllers
 {
@@ -25,7 +27,7 @@ namespace ProductCatalog.Controllers
         [HttpGet]
         public async Task<IEnumerable<ProductModel>> GetProducts()
         {
-            return await _context.Products
+            return await _context.Products.Where(d => !d.IsDeleted)
                 .Select(x => new ProductModel
                 {
                     Id = x.Id,
@@ -46,29 +48,22 @@ namespace ProductCatalog.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductModel>> GetProductModel(int id)
         {
-            var productModel = await _context.Products
-                .Where(i=> i.Id ==id)
-                .Select(x => new ProductModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
-                    Specification = x.Specification,
-                    ProductCategory = new ProductCategoryModel
-                    {
-                        Id = x.ProductCategory.Id,
-                        Name = x.ProductCategory.Name,
-                        Description = x.ProductCategory.Description
-                    }
-                })
-                .FirstOrDefaultAsync();
+            var product = await _context.Products.FindAsync(id);
+            if (!product.Exist()) return NotFound();
 
-            if (productModel == null)
+            return new ProductModel
             {
-                return NotFound();
-            }
-
-            return productModel;
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Specification = product.Specification,
+                ProductCategory = new ProductCategoryModel
+                {
+                    Id = product.ProductCategory.Id,
+                    Name = product.ProductCategory.Name,
+                    Description = product.ProductCategory.Description
+                }
+            };
         }
 
         // PUT: api/Products/5
@@ -77,8 +72,7 @@ namespace ProductCatalog.Controllers
             ProductPutModel productModel)
         {
             var product = await _context.Products.FindAsync(id);
-
-            if (product is null) return NotFound();
+            if (!product.Exist()) return NotFound();
 
             product.ProductCategoryId = productModel.ProductCategoryId;
             product.Specification = productModel.Specification;
@@ -110,13 +104,13 @@ namespace ProductCatalog.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Product>> DeleteProductModel(int id)
         {
-            var productModel = await _context.Products.FindAsync(id);
-            if (productModel is null) return NotFound();
+            var product = await _context.Products.FindAsync(id);
+            if (!product.Exist()) return NotFound();
 
-            _context.Products.Remove(productModel);
+            product.IsDeleted = true;
             await _context.SaveChangesAsync();
 
-            return productModel;
+            return product;
         }
     }
 }
