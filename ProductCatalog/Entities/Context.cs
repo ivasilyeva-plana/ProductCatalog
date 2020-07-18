@@ -8,10 +8,10 @@ namespace ProductCatalog.Entities
     {
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Person> Persons { get; set; }
 
         public Context(DbContextOptions<Context> options) : base(options)
         {
-            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
@@ -42,6 +42,10 @@ namespace ProductCatalog.Entities
                        })
                    }
                );
+
+            modelBuilder.Entity<Person>().HasData(
+                new Person {Id = 1, Login = "user", Password = "user", Role = Role.User.ToString()},
+                new Person {Id = 2, Login = "admin", Password = "admin", Role = Role.Admin.ToString()});
         }
     }
 }

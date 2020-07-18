@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProductCatalog.Models;
+using ProductCatalog.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ProductCatalog.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProductCatalog.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-  //  [Produces("application/json")]
+    [Authorize(Roles = nameof(Role.Admin))]
     public class ProductCategoriesController : ControllerBase
     {
         private readonly Context _context;
