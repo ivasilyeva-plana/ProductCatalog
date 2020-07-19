@@ -86,7 +86,7 @@ namespace ProductCatalog.Controllers
 
         // POST: api/Products
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProductModel(ProductPutModel productModel)
+        public async Task<ActionResult<ProductModel>> PostProductModel(ProductPutModel productModel)
         {
             var entity = _context.Products.Add(new Product
             {
@@ -102,7 +102,7 @@ namespace ProductCatalog.Controllers
 
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Product>> DeleteProductModel(int id)
+        public async Task<ActionResult<ProductModel>> DeleteProductModel(int id)
         {
             var product = await _context.Products.FindAsync(id);
             if (!product.Exist()) return NotFound();
@@ -110,7 +110,13 @@ namespace ProductCatalog.Controllers
             product.IsDeleted = true;
             await _context.SaveChangesAsync();
 
-            return product;
+            return new ProductModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Specification = product.Specification,
+            };
         }
     }
 }

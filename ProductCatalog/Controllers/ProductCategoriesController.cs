@@ -12,7 +12,6 @@ namespace ProductCatalog.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     [Authorize(Roles = nameof(Role.Admin))]
     public class ProductCategoriesController : ControllerBase
     {
@@ -86,15 +85,28 @@ namespace ProductCatalog.Controllers
 
         // DELETE: api/ProductCategories/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ProductCategory>> DeleteProductCategory(int id)
+        public async Task<ActionResult<ProductCategoryModel>> DeleteProductCategory(int id)
         {
-            var productCategory = await _context.ProductCategories.FindAsync(id);
+            var productCategory = await _context.ProductCategories
+                .Include(i=>i.Products)
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (!productCategory.Exist()) return NotFound();
 
             productCategory.IsDeleted = true;
+
+            foreach (var item in productCategory.Products)
+            {
+                item.IsDeleted = true;
+            }
+
             await _context.SaveChangesAsync();
 
-            return productCategory;
+            return new ProductCategoryModel
+            {
+                Id = productCategory.Id,
+                Name = productCategory.Name,
+                Description = productCategory.Description
+            };
         }
 
     }

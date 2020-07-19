@@ -5,4 +5,6 @@
 /.vs/ProductCatalog
 /ProductCatalog/bin
 /ProductCatalog/obj
-/ProductCatalog/Logs/ProductCatalog-20200719.log
+/ProductCatalog/Logs
+/ProductCatalog.Tests/bin
+/ProductCatalog.Tests/obj

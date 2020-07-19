@@ -21,31 +21,6 @@ namespace ProductCatalog.Entities
                 .HasOne(p => p.ProductCategory)
                 .WithMany(pc => pc.Products)
                 .HasForeignKey(pc => pc.ProductCategoryId);
-         
-            var pc1 = new ProductCategory {Id = 1, Name = "Молочная продукция"};
-            var pc2 = new ProductCategory {Id = 2, Name = "Выпечка"};
-
-            modelBuilder.Entity<ProductCategory>().HasData(pc1, pc2);
-            
-            modelBuilder.Entity<Product>().HasData(
-                   new Product { Id = 1, ProductCategoryId = 1, Name = "Молоко", 
-                       Specification = JsonConvert.SerializeObject(new JObject{
-                           { "Вес", "500г" },
-                           { "Тара", "Стекляная бутылка" }
-                       })
-                   },
-                   new Product { Id = 2, ProductCategoryId = 1, Name = "Кефир" },
-                   new Product { Id = 3, ProductCategoryId = 2, Name = "Плюшка",
-                       Specification = JsonConvert.SerializeObject(new JObject{
-                           { "Вес", "500г" },
-                           { "Состав", new JArray {"Мука", "Масло", "Яйца", "Сахар" }}
-                       })
-                   }
-               );
-
-            modelBuilder.Entity<Person>().HasData(
-                new Person {Id = 1, Login = "user", Password = "user", Role = Role.User.ToString()},
-                new Person {Id = 2, Login = "admin", Password = "admin", Role = Role.Admin.ToString()});
         }
     }
 }

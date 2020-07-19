@@ -11,6 +11,7 @@ using ProductCatalog.Authentication;
 using ProductCatalog.Entities;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using ProductCatalog.Entities.TestData;
 using ProductCatalog.Filters;
 
 namespace ProductCatalog
@@ -28,7 +29,8 @@ namespace ProductCatalog
         public void ConfigureServices(IServiceCollection services)
         {
             var connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<Context>(options => options.UseSqlServer(connection));
+            services.AddDbContext<Context>(options => options.UseSqlServer(connection))
+                .AddScoped<ISeeder<Context>, TestDataSeeder>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -85,7 +87,8 @@ namespace ProductCatalog
         public void Configure(IApplicationBuilder app,
             IWebHostEnvironment env,
             Context db,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            ISeeder<Context> seeder)
         {
             if (env.IsDevelopment())
             {
@@ -113,6 +116,8 @@ namespace ProductCatalog
             });
 
             db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+            seeder.Seed(db);
         }
     }
 }
